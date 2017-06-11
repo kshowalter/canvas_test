@@ -1,5 +1,5 @@
 {
-  "name": "canvas test",
+  "name": "canvas_test",
   "version": "0.1.0",
   "description": "Test creation of canvas element.",
   "main": "index.js",
