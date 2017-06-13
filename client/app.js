@@ -97,7 +97,7 @@ function draw(id) {
     var width = 360*2;
     var height = 180*2;
 
-    var img_data_land = ctx.createImageData(width, height);
+    //var img_data_land = ctx.createImageData(width, height);
     var img_data_map = ctx.createImageData(width, height);
     var img_data_temperature = ctx.createImageData(width, height);
     var img_data_rain = ctx.createImageData(width, height);
@@ -151,7 +151,7 @@ function draw(id) {
 
         // max avg temp = 30
         // min avg temp = -30
-        var temperature = ( Math.abs(lat)/90 * 60 - 30 ) + ( altitude * 5 ) + ( termperature_noise * 2 );
+        var temperature = ( (90-Math.abs(lat))/90 * 60 - 30 ) + ( altitude * 5 ) + ( termperature_noise * 2 );
         measurments[lon][lat].temperature = temperature;
         if( temperature < range[0] ) range[0] = temperature;
         if( temperature > range[1] ) range[1] = temperature;
@@ -188,23 +188,23 @@ function draw(id) {
         var land_sea_rgb;
         if(altitude < sealevel) {
           biome_rgb = biome_rgbs['water'];
-          land_sea_rgb = biome_rgbs['water'];
+          //land_sea_rgb = biome_rgbs['water'];
         } else {
           biome_rgb = biome_rgbs[biome_name];
-          land_sea_rgb = biome_rgbs['plains'];
+          //land_sea_rgb = biome_rgbs['plains'];
 
         }
 
         var i = ( ix + iy*width ) * 4;
         a = 255;
 
-        r = land_sea_rgb[0];
-        g = land_sea_rgb[1];
-        b = land_sea_rgb[2];
-        img_data_land.data[i+0] = r;
-        img_data_land.data[i+1] = g;
-        img_data_land.data[i+2] = b;
-        img_data_land.data[i+3] = a;
+        //r = land_sea_rgb[0];
+        //g = land_sea_rgb[1];
+        //b = land_sea_rgb[2];
+        //img_data_land.data[i+0] = r;
+        //img_data_land.data[i+1] = g;
+        //img_data_land.data[i+2] = b;
+        //img_data_land.data[i+3] = a;
 
         r = biome_rgb[0];
         g = biome_rgb[1];
@@ -215,7 +215,7 @@ function draw(id) {
         img_data_map.data[i+3] = a;
         //*/
 
-        var h = ( temperature/40 + 1 )/2 * 240/360;
+        var h = (1-(temperature+40)/80) * 240/360;
         var temperature_rgb = hsltorgb(h,1,0.5);
         img_data_temperature.data[i+0] = temperature_rgb[0];
         img_data_temperature.data[i+1] = temperature_rgb[1];
@@ -242,8 +242,8 @@ function draw(id) {
     //}, 0);
     var cx = 10;
     var cy = 10;
-    ctx.putImageData(img_data_land, cx, cy);
-    cy += 10 + height;
+    //ctx.putImageData(img_data_land, cx, cy);
+    //cy += 10 + height;
     ctx.putImageData(img_data_map, cx, cy);
     cy += 10 + height;
     ctx.putImageData(img_data_temperature, cx, cy);
@@ -253,7 +253,7 @@ function draw(id) {
 
 
     cx = 10 + width + 30;
-    cy = 10 + height + 10;
+    cy = 10;
     ctx.strokeStyle = 'black';
     for( var biome_name in biome_rgbs){
       biome_rgb = biome_rgbs[biome_name];
@@ -270,7 +270,6 @@ function draw(id) {
 
     var cx = 10;
     var cy = 10;
-    cy += 10 + height;
     ctx.beginPath();
     ctx.arc(cx, cy, 1, 0, 2*Math.PI);
     ctx.fill();
@@ -287,7 +286,6 @@ function draw(id) {
 
     var cx = 10;
     var cy = 10;
-    cy += 10 + height;
     ctx.beginPath();
     lon = 0;
     lat = 0;
@@ -298,8 +296,6 @@ function draw(id) {
 
     var cx = 10;
     var cy = 10;
-    cy += 10 + height;
-
     var attemts = 0;
     var cities = global.cities = [];
     while( cities.length < 5 || attemts < 30 ){
@@ -333,7 +329,7 @@ function draw(id) {
     }
 
     cx = 10 + width + 150;
-    cy = 10 + height + 10;
+    cy = 10;
     ctx.strokeStyle = 'black';
     cities.forEach(function(city){
       //var city_rgb = city.color.slice(4,-1).split(',');
