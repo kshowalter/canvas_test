@@ -8,8 +8,8 @@ import legend from './legend';
 
 import settings from './settings';
 
-var width = settings.width;
-var height = settings.height;
+var map_width = settings.map_width;
+var map_height = settings.map_height;
 
 function disableSmoothRendering(ctx) {
   ctx.webkitImageSmoothingEnabled = false;
@@ -28,7 +28,7 @@ export default function(id, planet, callback){
   if (canvas.getContext) {
     var ctx = canvas.getContext('2d');
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.map_width, canvas.map_height);
     disableSmoothRendering(ctx);
 
     var cx = 10;
@@ -39,15 +39,15 @@ export default function(id, planet, callback){
 
 
     map_pixel(ctx, planet, [cx,cy]);
-    ctx.drawImage(canvas, cx, cy, width*settings.pixelation, height*settings.pixelation, cx, cy, width, height);
+    ctx.drawImage(canvas, cx, cy, map_width*settings.pixelation, map_height*settings.pixelation, cx, cy, map_width, map_height);
 
-    //cy += 10 + height;
+    //cy += 10 + map_height;
     //map_thermal(ctx, measurments, [cx,cy]);
-    cy += 10 + height;
+    cy += 10 + map_height;
     globe(ctx, planet, [cx,cy]);
-    ctx.drawImage(canvas, cx, cy, width*settings.pixelation, height*settings.pixelation, cx, cy, width, height);
+    ctx.drawImage(canvas, cx, cy, map_width*settings.pixelation, map_height*settings.pixelation, cx, cy, map_width, map_height);
 
-    cx = 10 + width + 30;
+    cx = 10 + map_width + 30;
     cy = 10;
 
 
@@ -58,8 +58,8 @@ export default function(id, planet, callback){
     planet.cities.forEach(function(city){
       ctx.fillStyle = city.color;
       ctx.beginPath();
-      var lx = cx + (city.lon+360/2)*width/360; // x coordinate
-      var ly = cy + (city.lat+180/2)*height/180; // y coordinate
+      var lx = cx + (city.lon+360/2)*map_width/360; // x coordinate
+      var ly = cy + (city.lat+180/2)*map_height/180; // y coordinate
       var radius = 5; // Arc radius
       var startAngle = 0; // Starting point on circle
       var endAngle = 2 * Math.PI; // End point on circle

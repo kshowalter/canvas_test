@@ -1,18 +1,18 @@
 import settings from './settings';
 
-var width = settings.width;
-var height = settings.height;
+var map_width = settings.map_width;
+var map_height = settings.map_height;
 
 export default function(ctx, measurments, location){
-  var img_data_temperature = ctx.createImageData(width, height);
-  var img_data_rain = ctx.createImageData(width, height);
+  var img_data_temperature = ctx.createImageData(map_width, map_height);
+  var img_data_rain = ctx.createImageData(map_width, map_height);
 
-  for (var ix = 0; ix <= width; ix++) {
+  for (var ix = 0; ix <= map_width; ix++) {
     var grid_line = [];
-    for (var iy = 0; iy <= height; iy++) {
+    for (var iy = 0; iy <= map_height; iy++) {
 
-      var lon = ix * 360/width - 360/2;
-      var lat = iy * 180/height - 180/2;
+      var lon = ix * 360/map_width - 360/2;
+      var lat = iy * 180/map_height - 180/2;
 
       measurments[lon] = measurments[lon] || [];
 
@@ -33,7 +33,7 @@ export default function(ctx, measurments, location){
 
       }
 
-      var i = ( ix + iy*width ) * 4;
+      var i = ( ix + iy*map_width ) * 4;
       a = 255;
 
       //r = land_sea_rgb[0];
@@ -81,11 +81,11 @@ export default function(ctx, measurments, location){
   var cx = 10;
   var cy = 10;
   //ctx.putImageData(img_data_land, cx, cy);
-  //cy += 10 + height;
+  //cy += 10 + map_height;
   ctx.putImageData(img_data_map, cx, cy);
-  cy += 10 + height;
+  cy += 10 + map_height;
   ctx.putImageData(img_data_temperature, cx, cy);
-  cy += 10 + height;
+  cy += 10 + map_height;
   ctx.putImageData(img_data_rain, cx, cy);
 
 }

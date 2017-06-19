@@ -1,19 +1,19 @@
 import settings from './settings';
 
-var width = settings.width;
-var height = settings.height;
+var map_width = settings.map_width;
+var map_height = settings.map_height;
 
 export default function(ctx, coor_details, cx_cy){
   var r,g,b,a;
 
-  var img_data_map = ctx.createImageData(width, height);
+  var img_data_map = ctx.createImageData(map_width, map_height);
   var measurments = global.measurments = [];
 
-  for (var ix = 0; ix <= width; ix++) {
-    for (var iy = 0; iy <= height; iy++) {
+  for (var ix = 0; ix <= map_width; ix++) {
+    for (var iy = 0; iy <= map_height; iy++) {
 
-      var lon = ix * 360/width - 360/2;
-      var lat = iy * 180/height - 180/2;
+      var lon = ix * 360/map_width - 360/2;
+      var lat = iy * 180/map_height - 180/2;
 
       measurments[lon] = measurments[lon] || [];
 
@@ -29,7 +29,7 @@ export default function(ctx, coor_details, cx_cy){
         biome_rgb = settings.rgb.biome[measurment.biome_name];
       }
 
-      var i = ( ix + iy*width ) * 4;
+      var i = ( ix + iy*map_width ) * 4;
       a = 255;
 
       r = biome_rgb[0];

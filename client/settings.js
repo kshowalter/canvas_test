@@ -1,6 +1,6 @@
 export default {
-  width: 360*2,
-  height: 180*2,
+  map_width: 360*2,
+  map_height: 180*2,
   sealevel: 0.6 *(2)-1,
   rgb: {
     biome: {
