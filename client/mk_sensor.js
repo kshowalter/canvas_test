@@ -1,7 +1,5 @@
-var continent_factor = 75;
-var continent_noise_factor = 25;
-var temperature_factor = 23;
-var rain_factor = 42;
+var noise = require('../lib/noisejs/perlin');
+
 
 var to_cartesian = function(r,lon,lat){
   lon *= Math.PI/180;
@@ -21,9 +19,15 @@ var to_cartesian = function(r,lon,lat){
 };
 
 
-export default function(noise){
+export default function(planet_name){
+  noise.seed(planet_name);
 
-  var coor_details = function(coor){
+  var continent_factor = 75;
+  var continent_noise_factor = 25;
+  var temperature_factor = 23;
+  var rain_factor = 42;
+
+  var sensor = function(coor){
     var measurment = {
       coor: coor
     };
@@ -76,5 +80,5 @@ export default function(noise){
   };
 
 
-  return coor_details;
+  return sensor;
 }

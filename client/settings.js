@@ -12,5 +12,6 @@ export default {
       'tundra': [233, 231, 222],
       'polar': [250,252,253],
     }
-  }
+  },
+  pixelation: 0.5
 };
