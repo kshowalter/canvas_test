@@ -19,8 +19,8 @@ var to_cartesian = function(r,lon,lat){
 };
 
 
-export default function(planet_name){
-  noise.seed(planet_name);
+export default function(planet){
+  noise.seed(planet.name);
 
   var continent_factor = 75;
   var continent_noise_factor = 25;
@@ -34,7 +34,7 @@ export default function(planet_name){
     var lon = coor[0];
     var lat = coor[1];
 
-    var location = measurment.location = to_cartesian(100,coor[0],coor[1]);
+    var location = measurment.location = to_cartesian(planet.radius,coor[0],coor[1]);
 
     // All noise functions return values in the range of -1 to 1.
     var altitude = noise.simplex3( location[0]/continent_factor, location[1]/continent_factor, location[2]/continent_factor );

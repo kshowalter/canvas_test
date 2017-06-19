@@ -8,8 +8,8 @@ export default function(lon,lat){
   lon = lon / Math.cos(standard_parallels) + 0;
   lat = lat + standard_parallels;
 
-  var central_meridian = 0;
-  var standard_latitude = 0;
+  var central_longitude = 0;
+  var central_latitude = 0;
 
   return [lon,lat];
 }

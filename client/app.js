@@ -40,6 +40,7 @@ settings.pixelation = 0.1;
 var refine = function refine(){
   draw('canvas', planet, function(){
 
+    /*
     if( settings.pixelation > 1 ){
       settings.pixelation = 1;
       refine();
@@ -54,6 +55,7 @@ var refine = function refine(){
     if( settings.pixelation === 1 ){
       console.log('FULL resolultion [XX]');
     }
+    */
   });
 
 

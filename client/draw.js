@@ -3,6 +3,7 @@ import projection_cyl from './projection_cyl';
 import map from './map';
 import map_pixel from './map_pixel';
 import map_thermal from './map_thermal';
+import globe from './globe';
 import legend from './legend';
 
 import settings from './settings';
@@ -38,10 +39,13 @@ export default function(id, planet, callback){
 
 
     map_pixel(ctx, planet, [cx,cy]);
-    ctx.drawImage(canvas, 10, 10, width*settings.pixelation, height*settings.pixelation, 10, 10, width, height);
+    ctx.drawImage(canvas, cx, cy, width*settings.pixelation, height*settings.pixelation, cx, cy, width, height);
 
     //cy += 10 + height;
     //map_thermal(ctx, measurments, [cx,cy]);
+    cy += 10 + height;
+    globe(ctx, planet, [cx,cy]);
+    ctx.drawImage(canvas, cx, cy, width*settings.pixelation, height*settings.pixelation, cx, cy, width, height);
 
     cx = 10 + width + 30;
     cy = 10;

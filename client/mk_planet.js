@@ -7,8 +7,11 @@ import mk_sensor from './mk_sensor';
 export default function(planet_name){
   var planet = {};
 
+  planet.radius = 100;
+
+  var sensor = mk_sensor(planet);
+  
   var chance = Chance(planet_name);
-  var sensor = mk_sensor(planet_name);
 
   planet.sensor = sensor;
 
