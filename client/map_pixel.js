@@ -17,6 +17,7 @@ export default function(ctx, planet, cx_cy){
 
       var lon = ix * 360/map_width - 360/2;
       var lat = iy * 180/map_height - 180/2;
+      lat *= -1;
 
       var coor = [lon,lat];
 

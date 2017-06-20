@@ -2,6 +2,8 @@ import Chance from 'chance';
 import settings from './settings';
 import mk_sensor from './mk_sensor';
 import f from 'functions';
+import great_circle_distance from './function/great_circle_distance';
+import merge_cities from './function/merge_cities';
 
 
 
@@ -17,6 +19,9 @@ export default function(planet_name){
   var chance = Chance(planet_name);
 
   planet.sensor = sensor;
+
+  planet.cities = [];
+
 
 
   var continent_map = [];
@@ -51,12 +56,16 @@ export default function(planet_name){
 
 
   var potential_cities = [];
-  f.range(50).forEach(function(){
+  f.range(200).forEach(function(){
     var city_name = chance.city();
-    var lon = chance.integer({min: -180, max: 180});
-    var lat = chance.integer({min: -90, max: 90});
+    var lon = chance.floating({min: -180, max: 180});
+    var lat = chance.floating({min: -90, max: 90});
     var measurment = sensor([lon,lat]);
-
+    var population = Math.floor( ( chance.normal({mean: 500000, dev: 50000}) +
+                       chance.integer({min:0,max:1000000}) +
+                      chance.integer({min:0,max:10000000})
+                    )/3 );
+    var size = Math.floor( population / 1000000 );
     var potential_city_values = {};
     //if( measurment.altitude > 0 ) potential_city_values.not_floded = 100;
     var max_altitude = planet.radius + planet.radius_deviation - planet.sealevel;
@@ -67,8 +76,7 @@ export default function(planet_name){
       var depth = planet.sealevel-measurment.altitude;
       potential_city_values.altitude = - Math.pow(depth,0.5)/Math.pow(max_depth,0.5)*100;
     }
-    potential_city_values.temperature = 100 - Math.abs( measurment.temperature - 15 )*100/25;
-    potential_city_values.temperature *= 3;
+    potential_city_values.temperature = 100-Math.pow(Math.abs(15-measurment.temperature),0.5)/Math.pow(15,0.5)*100;
     potential_city_values.rainfall = 100 - Math.abs( measurment.rainfall - 250 )*100/200;
 
     var potential_city_value = Object.keys(potential_city_values).reduce(function(sum,name){
@@ -79,10 +87,12 @@ export default function(planet_name){
       name: city_name,
       lon: lon,
       lat: lat,
+      population: population,
       color: chance.color({format: 'rgb'}),
       measurment: measurment,
       potential_city_value: potential_city_value,
-      potential_city_values: potential_city_values
+      potential_city_values: potential_city_values,
+      events: []
     };
 
     potential_cities.push(city);
@@ -93,8 +103,41 @@ export default function(planet_name){
     return b.potential_city_value - a.potential_city_value;
   });
 
-  planet.cities = potential_cities.slice(0,10);
+  potential_cities = potential_cities.slice(0,20);
 
+  potential_cities.some(function(city){
+    var incorporated = false;
+    planet.cities.forEach(function(second_city){
+      if( city.name !== second_city.name ){
+        var distance = great_circle_distance( city.lat, city.lon, second_city.lat, second_city.lon);
+        if( distance < 1000 ){
+          console.log(distance, 'merging: ', city, second_city);
+          second_city = merge_cities(second_city, city);
+          incorporated = true;
+          return true;
+        }
+      }
+
+    });
+    if( ! incorporated ){
+      planet.cities.push(city);
+    }
+  });
+
+  planet.cities.forEach(function(city){
+    console.log(
+      'T',
+      city.measurment.temperature.toFixed(2),
+      city.potential_city_values.temperature.toFixed(2),
+      'A',
+      city.measurment.altitude.toFixed(2),
+      city.potential_city_values.altitude.toFixed(2),
+      'R',
+      city.measurment.rainfall.toFixed(2),
+      city.potential_city_values.rainfall.toFixed(2),
+      city.name,
+    );
+  })
 
   return planet;
 }

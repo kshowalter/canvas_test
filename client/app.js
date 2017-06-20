@@ -46,7 +46,7 @@ var refine = function refine(){
   draw('canvas', planet, function(){
 
 
-    /*
+    //*
     if( settings.pixelation > 1 ){
       settings.pixelation = 1;
       refine();

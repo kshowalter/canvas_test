@@ -43,7 +43,7 @@ export default function(id, planet, callback){
     map_pixel(ctx, planet, [cx,cy]);
     ctx.drawImage(canvas, cx, cy, map_width*settings.pixelation, map_height*settings.pixelation, cx, cy, map_width, map_height);
 
-    cx = 10 + map_width + 30;
+    cx = 10 + map_width + 40;
     cy = 10;
 
 
@@ -55,7 +55,7 @@ export default function(id, planet, callback){
       ctx.fillStyle = city.color;
       ctx.beginPath();
       var lx = cx + (city.lon+360/2)*map_width/360; // x coordinate
-      var ly = cy + (city.lat+180/2)*map_height/180; // y coordinate
+      var ly = cy + (-city.lat+180/2)*map_height/180; // y coordinate
       var radius = 5; // Arc radius
       var startAngle = 0; // Starting point on circle
       var endAngle = 2 * Math.PI; // End point on circle
@@ -66,11 +66,20 @@ export default function(id, planet, callback){
       ctx.fillText(text, lx+7, ly+4);
     });
 
+    cx = 10;
+    cy = 10;
+    ctx.beginPath();
+    ctx.moveTo(cx+map_width/2, cy);
+    ctx.lineTo(cx+map_width/2, cy+map_height);
+    ctx.moveTo(cx, cy+map_height/2);
+    ctx.lineTo(cx+map_width, cy+map_height/2);
+    ctx.stroke();
 
     //cy += 10 + map_height;
     //map_thermal(ctx, measurments, [cx,cy]);
 
-    cy = 10 + map_height + 10;
+    cy = 10 + map_height + 10 + 50;
+
     ctx.clearRect(cx, cy, globe_size, globe_size);
     globe(ctx, planet, [cx,cy], -1*360/3);
     ctx.drawImage(canvas, cx, cy, globe_size*settings.pixelation, globe_size*settings.pixelation, cx, cy, globe_size, globe_size);

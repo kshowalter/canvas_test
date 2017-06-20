@@ -17,6 +17,7 @@ export default function(ctx, planet, cx_cy, central_longitude){
 
       var x = ix * diam/globe_size * 1.1 - diam*1.1 /2;
       var y = iy * diam/globe_size * 1.1 - diam*1.1 /2;
+      y *= -1;
 
       var coor = projection_orthographic(planet, x, y, central_longitude);
 
