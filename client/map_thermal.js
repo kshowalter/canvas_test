@@ -24,7 +24,7 @@ export default function(ctx, measurments, location){
 
       var biome_rgb;
       var land_sea_rgb;
-      if( measurment.altitude < sealevel) {
+      if( measurment.radius_deviation_factor < sealevel) {
         biome_rgb = settings.rgb.biome['water'];
         //land_sea_rgb = settings.rgb.biome['water'];
       } else {

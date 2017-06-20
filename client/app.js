@@ -35,10 +35,16 @@ canvas.style.backgroundColor = 'white';
 
 
 var planet = mk_planet('idoria');
-settings.pixelation = 0.1;
+console.log('|> ', planet);
+
+
+
+
+settings.pixelation = 0.25;
 
 var refine = function refine(){
   draw('canvas', planet, function(){
+
 
     /*
     if( settings.pixelation > 1 ){
@@ -55,7 +61,7 @@ var refine = function refine(){
     if( settings.pixelation === 1 ){
       console.log('FULL resolultion [XX]');
     }
-    */
+    //*/
   });
 
 

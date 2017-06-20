@@ -10,6 +10,7 @@ import settings from './settings';
 
 var map_width = settings.map_width;
 var map_height = settings.map_height;
+var globe_size = settings.globe_size;
 
 function disableSmoothRendering(ctx) {
   ctx.webkitImageSmoothingEnabled = false;
@@ -29,7 +30,7 @@ export default function(id, planet, callback){
     var ctx = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, canvas.map_width, canvas.map_height);
-    disableSmoothRendering(ctx);
+    //disableSmoothRendering(ctx);
 
     var cx = 10;
     var cy = 10;
@@ -38,13 +39,8 @@ export default function(id, planet, callback){
 
 
 
+    ctx.clearRect(cx, cy, map_width, map_height);
     map_pixel(ctx, planet, [cx,cy]);
-    ctx.drawImage(canvas, cx, cy, map_width*settings.pixelation, map_height*settings.pixelation, cx, cy, map_width, map_height);
-
-    //cy += 10 + map_height;
-    //map_thermal(ctx, measurments, [cx,cy]);
-    cy += 10 + map_height;
-    globe(ctx, planet, [cx,cy]);
     ctx.drawImage(canvas, cx, cy, map_width*settings.pixelation, map_height*settings.pixelation, cx, cy, map_width, map_height);
 
     cx = 10 + map_width + 30;
@@ -65,7 +61,26 @@ export default function(id, planet, callback){
       var endAngle = 2 * Math.PI; // End point on circle
       ctx.arc(lx, ly, radius, startAngle, endAngle);
       ctx.fill();
+      ctx.fillStyle = 'black';
+      var text = city.name;
+      ctx.fillText(text, lx+7, ly+4);
     });
+
+
+    //cy += 10 + map_height;
+    //map_thermal(ctx, measurments, [cx,cy]);
+
+    cy = 10 + map_height + 10;
+    ctx.clearRect(cx, cy, globe_size, globe_size);
+    globe(ctx, planet, [cx,cy], -1*360/3);
+    ctx.drawImage(canvas, cx, cy, globe_size*settings.pixelation, globe_size*settings.pixelation, cx, cy, globe_size, globe_size);
+    cx += globe_size;
+    globe(ctx, planet, [cx,cy], 0);
+    ctx.drawImage(canvas, cx, cy, globe_size*settings.pixelation, globe_size*settings.pixelation, cx, cy, globe_size, globe_size);
+    cx += globe_size;
+    globe(ctx, planet, [cx,cy], 1*360/3);
+    ctx.drawImage(canvas, cx, cy, globe_size*settings.pixelation, globe_size*settings.pixelation, cx, cy, globe_size, globe_size);
+
 
 
 

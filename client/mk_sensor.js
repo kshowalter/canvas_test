@@ -22,38 +22,46 @@ var to_cartesian = function(r,lon,lat){
 export default function(planet){
   noise.seed(planet.name);
 
-  var continent_factor = 75;
-  var continent_noise_factor = 25;
-  var temperature_factor = 23;
-  var rain_factor = 42;
+  var continent_factor = 6000;
+  var continent_noise_factor = 1500;
+  var temperature_factor = 2300;
+  var rain_factor = 4200;
 
   var sensor = function(coor){
+    var longitude_sensor_correction_factor = planet.longitude_sensor_correction_factor || 0;
     var measurment = {
       coor: coor
     };
-    var lon = coor[0];
+    var lon = coor[0] + longitude_sensor_correction_factor;
     var lat = coor[1];
 
     var location = measurment.location = to_cartesian(planet.radius,coor[0],coor[1]);
 
     // All noise functions return values in the range of -1 to 1.
-    var altitude = noise.simplex3( location[0]/continent_factor, location[1]/continent_factor, location[2]/continent_factor );
-    var altitude_noise = noise.simplex3( location[0]/continent_noise_factor, location[1]/continent_noise_factor, location[2]/continent_noise_factor );
+    var radius_deviation_factor = noise.simplex3( location[0]/continent_factor, location[1]/continent_factor, location[2]/continent_factor );
+    var radius_deviation_factor_noise = noise.simplex3( location[0]/continent_noise_factor, location[1]/continent_noise_factor, location[2]/continent_noise_factor );
     var termperature_noise = noise.simplex3( location[0]/temperature_factor, location[1]/temperature_factor, location[2]/temperature_factor );
     var rain_noise = noise.simplex3( location[0]/rain_factor, location[1]/rain_factor, location[2]/rain_factor );
 
-    altitude_noise *= 0.2;
-    altitude += altitude_noise;
-    measurment.altitude = altitude;
+    radius_deviation_factor_noise *= 0.2;
+    radius_deviation_factor += radius_deviation_factor_noise;
+    measurment.radius_deviation_factor = radius_deviation_factor;
+
+    var altitude_factor = ( ( measurment.radius_deviation_factor + 1 ) - ( planet.sealevel + 1 ) )/2;
+
+    measurment.radius = planet.radius + measurment.radius_deviation_factor * planet.radius_deviation;
+    measurment.altitude = measurment.radius - planet.sealevel;
+
+
 
     // max avg temp = 30
     // min avg temp = -30
-    var temperature = ( (90-Math.abs(lat))/90 * 60 - 30 ) + ( altitude * 5 ) + ( termperature_noise * 2 );
+    var temperature = ( (90-Math.abs(lat))/90 * 60 - 30 ) + ( radius_deviation_factor * 5 ) + ( termperature_noise * 2 );
     measurment.temperature = temperature;
 
     // Mean annual rainfall (cm)
     // range 0-350+ cm
-    var rainfall = 300 - ( Math.abs(altitude) * 250 ) + ( rain_noise * 50 );
+    var rainfall = 300 - ( Math.abs(radius_deviation_factor) * 250 ) + ( rain_noise * 50 );
     measurment.rainfall = rainfall;
 
     var biome_name;

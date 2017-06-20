@@ -1,50 +1,53 @@
 import settings from './settings';
 import projection_orthographic from './projection_orthographic';
 
-
-
-export default function(ctx, planet, cx_cy){
+export default function(ctx, planet, cx_cy, central_longitude){
   var r,g,b,a;
 
-  var map_width = settings.map_width;
-  var map_height = settings.map_height;
-  map_width *= settings.pixelation;
-  map_height *= settings.pixelation;
+  var globe_size = settings.globe_size;
+  globe_size *= settings.pixelation;
 
-  var img_data_map = ctx.createImageData(map_width, map_height);
+  var diam = planet.radius * 2;
+
+  var img_data_map = ctx.createImageData(globe_size, globe_size);
   //var measurments = global.measurments = [];
 
-  console.log(map_width, map_height);
+  for (var ix = 0; ix <= globe_size; ix++) {
+    for (var iy = 0; iy <= globe_size; iy++) {
 
-  for (var ix = 0; ix <= map_width; ix++) {
-    for (var iy = 0; iy <= map_height; iy++) {
+      var x = ix * diam/globe_size * 1.1 - diam*1.1 /2;
+      var y = iy * diam/globe_size * 1.1 - diam*1.1 /2;
 
-      var x = ix * 360/map_width - 360/2;
-      var y = iy * 180/map_height - 180/2;
-      /*
-
-      measurments[lon] = measurments[lon] || [];
-
-      var coor = [lon,lat];
-      */
-
-      var coor = projection_orthographic( planet, x, y);
+      var coor = projection_orthographic(planet, x, y, central_longitude);
 
       if( !isNaN(coor[0]) && !isNaN(coor[1]) ){
 
         //planet.sensor(coor);
         var measurment = planet.sensor(coor);
         //measurments[lon][lat] = measurment;
-        console.log(coor, measurment.coor);
 
         var biome_rgb;
-        if( measurment.altitude < settings.sealevel) {
+        if( measurment.altitude < 0) {
           biome_rgb = settings.rgb.biome['water'];
         } else {
           biome_rgb = settings.rgb.biome[measurment.biome_name];
         }
 
-        var i = ( ix + iy*map_width ) * 4;
+        var i = ( ix + iy*globe_size ) * 4;
+        a = 255;
+
+        r = Math.floor( biome_rgb[0] * 0.85 );
+        g = Math.floor( biome_rgb[1] * 0.85 );
+        b = Math.floor( biome_rgb[2] * 0.85 );
+        img_data_map.data[i+0] = r;
+        img_data_map.data[i+1] = g;
+        img_data_map.data[i+2] = b;
+        img_data_map.data[i+3] = a;
+
+      } else {
+        biome_rgb = settings.rgb.biome['space'];
+
+        var i = ( ix + iy*globe_size ) * 4;
         a = 255;
 
         r = biome_rgb[0];
@@ -55,8 +58,6 @@ export default function(ctx, planet, cx_cy){
         img_data_map.data[i+2] = b;
         img_data_map.data[i+3] = a;
       }
-
-
 
     }
   }

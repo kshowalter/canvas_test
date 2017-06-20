@@ -1,6 +1,6 @@
-var standard_parallels = 37.5 * Math.PI / 180;
+//var standard_parallels = 37.5 * Math.PI / 180;
 
-export default function(planet, mx, my){
+export default function(planet, mx, my, central_longitude){
 
   var x = mx;
   var y = my;
@@ -14,7 +14,7 @@ export default function(planet, mx, my){
   //lon = lon / Math.cos(standard_parallels) + 0;
   //lat = lat + standard_parallels;
 
-  var central_longitude = 0;
+  central_longitude = central_longitude * Math.PI/180 || 0;
   var central_latitude = 0;
 
   var p = Math.sqrt( Math.pow(x,2) + Math.pow(y,2) );

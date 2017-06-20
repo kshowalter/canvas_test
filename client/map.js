@@ -23,7 +23,7 @@ export default function(ctx, coor_details, cx_cy){
       measurments[lon][lat] = measurment;
 
       var biome_rgb;
-      if( measurment.altitude < settings.sealevel) {
+      if( measurment.radius_deviation_factor < planet.sealevel) {
         biome_rgb = settings.rgb.biome['water'];
       } else {
         biome_rgb = settings.rgb.biome[measurment.biome_name];

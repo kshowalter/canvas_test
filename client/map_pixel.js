@@ -11,9 +11,6 @@ export default function(ctx, planet, cx_cy){
   map_height *= settings.pixelation;
 
   var img_data_map = ctx.createImageData(map_width, map_height);
-  var measurments = global.measurments = [];
-
-  console.log(map_width, map_height);
 
   for (var ix = 0; ix <= map_width; ix++) {
     for (var iy = 0; iy <= map_height; iy++) {
@@ -21,23 +18,21 @@ export default function(ctx, planet, cx_cy){
       var lon = ix * 360/map_width - 360/2;
       var lat = iy * 180/map_height - 180/2;
 
-      measurments[lon] = measurments[lon] || [];
-
       var coor = [lon,lat];
 
       var measurment = planet.sensor(coor);
-      measurments[lon][lat] = measurment;
 
       var biome_rgb;
-      if( measurment.altitude < settings.sealevel) {
+      if( measurment.altitude < 0 ) {
         biome_rgb = settings.rgb.biome['water'];
+        a = 128;
       } else {
         biome_rgb = settings.rgb.biome[measurment.biome_name];
+        a = 255;
       }
 
       var i = ( ix + iy*map_width ) * 4;
-      a = 255;
-
+      //a = 255;
       r = biome_rgb[0];
       g = biome_rgb[1];
       b = biome_rgb[2];
