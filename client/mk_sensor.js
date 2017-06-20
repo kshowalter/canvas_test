@@ -1,9 +1,9 @@
 var noise = require('../lib/noisejs/perlin');
 
 
-var to_cartesian = function(r,lon,lat){
-  lon *= Math.PI/180;
+var to_cartesian = function(r,lat,lon){
   lat *= Math.PI/180;
+  lon *= Math.PI/180;
 
   // https://stackoverflow.com/a/1185413
   //var x = r * Math.cos(lat) * Math.cos(lon);
@@ -35,7 +35,7 @@ export default function(planet){
     var lon = coor[0] + longitude_sensor_correction_factor;
     var lat = coor[1];
 
-    var location = measurment.location = to_cartesian(planet.radius,coor[0],coor[1]);
+    var location = measurment.location = to_cartesian(planet.radius,lat,lon);
 
     // All noise functions return values in the range of -1 to 1.
     var radius_deviation_factor = noise.simplex3( location[0]/continent_factor, location[1]/continent_factor, location[2]/continent_factor );

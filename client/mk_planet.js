@@ -88,6 +88,7 @@ export default function(planet_name){
       lon: lon,
       lat: lat,
       population: population,
+      size: size,
       color: chance.color({format: 'rgb'}),
       measurment: measurment,
       potential_city_value: potential_city_value,
@@ -111,7 +112,7 @@ export default function(planet_name){
       if( city.name !== second_city.name ){
         var distance = great_circle_distance( city.lat, city.lon, second_city.lat, second_city.lon);
         if( distance < 1000 ){
-          console.log(distance, 'merging: ', city, second_city);
+          //console.log(distance, 'merging: ', city, second_city);
           second_city = merge_cities(second_city, city);
           incorporated = true;
           return true;
@@ -124,6 +125,7 @@ export default function(planet_name){
     }
   });
 
+  /*
   planet.cities.forEach(function(city){
     console.log(
       'T',
@@ -138,6 +140,7 @@ export default function(planet_name){
       city.name,
     );
   })
+  //*/
 
   return planet;
 }

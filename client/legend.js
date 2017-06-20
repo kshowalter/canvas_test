@@ -38,7 +38,7 @@ export default function(ctx, planet, location){
     ctx.arc(cx, cy+10, 5, 0, 2*Math.PI);
     ctx.stroke();
     ctx.fillStyle = 'black';
-    var text = city.name +'  ['+ city.lon +', '+ city.lat +'], '+ f.format_value(city.measurment.altitude) +'km';
+    var text = city.name +', '+( city.population / 1000000 ).toFixed(1)+'M ['+ city.lat +', '+ city.lon +', '+ f.format_value(city.measurment.altitude) +'km ]';
     ctx.fillText(text, cx+10, cy+15);
     cy += 5 + 15;
   });

@@ -68,12 +68,16 @@ export default function(id, planet, callback){
 
     cx = 10;
     cy = 10;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(200, 200, 255, 0.75)';
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(cx+map_width/2, cy);
     ctx.lineTo(cx+map_width/2, cy+map_height);
     ctx.moveTo(cx, cy+map_height/2);
     ctx.lineTo(cx+map_width, cy+map_height/2);
     ctx.stroke();
+    ctx.restore();
 
     //cy += 10 + map_height;
     //map_thermal(ctx, measurments, [cx,cy]);
