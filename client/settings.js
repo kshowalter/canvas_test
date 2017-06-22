@@ -1,7 +1,7 @@
 export default {
   map_width: 360*2,
   map_height: 180*2,
-  globe_size: 300,
+  globe_map_size: 300,
   rgb: {
     biome: {
       'space': [0, 0, 0],

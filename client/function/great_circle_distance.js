@@ -1,6 +1,9 @@
 // from:
 // https://stackoverflow.com/a/365853
 
+// also:
+// http://www.movable-type.co.uk/scripts/latlong.html
+
 var degreesToRadians = function degreesToRadians(degrees) {
   return degrees * Math.PI / 180;
 };

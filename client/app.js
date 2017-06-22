@@ -35,7 +35,7 @@ canvas.style.backgroundColor = 'white';
 
 
 var planet = mk_planet('idoria');
-console.log('|> ', planet);
+console.log('|>|_/\\|\\|ET ', planet);
 
 
 
@@ -51,7 +51,7 @@ var refine = function refine(){
       settings.pixelation = 1;
       refine();
     }
-    if( settings.pixelation < 1 ){
+    if( settings.pixelation < 0.5 ){
       settings.pixelation *= 2;
       if( settings.pixelation > 1 ){ settings.pixelation = 1; }
       setTimeout(function(){

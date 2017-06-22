@@ -1,25 +1,25 @@
 import settings from './settings';
 import projection_orthographic from './projection_orthographic';
 
-export default function(ctx, planet, cx_cy, central_longitude){
+export default function(ctx, planet, cx_cy, central_latitude, central_longitude){
   var r,g,b,a;
 
-  var globe_size = settings.globe_size;
-  globe_size *= settings.pixelation;
+  var globe_map_size = settings.globe_map_size;
+  globe_map_size *= settings.pixelation;
 
   var diam = planet.radius * 2;
 
-  var img_data_map = ctx.createImageData(globe_size, globe_size);
+  var img_data_map = ctx.createImageData(globe_map_size, globe_map_size);
   //var measurments = global.measurments = [];
 
-  for (var ix = 0; ix <= globe_size; ix++) {
-    for (var iy = 0; iy <= globe_size; iy++) {
+  for (var ix = 0; ix <= globe_map_size; ix++) {
+    for (var iy = 0; iy <= globe_map_size; iy++) {
 
-      var x = ix * diam/globe_size * 1.1 - diam*1.1 /2;
-      var y = iy * diam/globe_size * 1.1 - diam*1.1 /2;
+      var x = ix * diam/globe_map_size /0.9 - diam/0.9 /2;
+      var y = iy * diam/globe_map_size /0.9 - diam/0.9 /2;
       y *= -1;
 
-      var coor = projection_orthographic(planet, x, y, central_longitude);
+      var coor = projection_orthographic(planet, x, y, central_latitude, central_longitude);
 
       if( !isNaN(coor[0]) && !isNaN(coor[1]) ){
 
@@ -34,7 +34,7 @@ export default function(ctx, planet, cx_cy, central_longitude){
           biome_rgb = settings.rgb.biome[measurment.biome_name];
         }
 
-        var i = ( ix + iy*globe_size ) * 4;
+        var i = ( ix + iy*globe_map_size ) * 4;
         a = 255;
 
         r = Math.floor( biome_rgb[0] * 0.85 );
@@ -48,7 +48,7 @@ export default function(ctx, planet, cx_cy, central_longitude){
       } else {
         biome_rgb = settings.rgb.biome['space'];
 
-        var i = ( ix + iy*globe_size ) * 4;
+        var i = ( ix + iy*globe_map_size ) * 4;
         a = 255;
 
         r = biome_rgb[0];
