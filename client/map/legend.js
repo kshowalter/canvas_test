@@ -1,4 +1,4 @@
-import settings from './settings';
+import settings from '../settings';
 
 export default function(ctx, planet, location){
 

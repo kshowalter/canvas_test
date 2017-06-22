@@ -1,6 +1,4 @@
-import settings from './settings';
-
-
+import settings from '../settings';
 
 export default function(ctx, planet, cx_cy){
   var r,g,b,a;

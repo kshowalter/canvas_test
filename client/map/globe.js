@@ -1,4 +1,4 @@
-import settings from './settings';
+import settings from '../settings';
 import projection_orthographic from './projection_orthographic';
 
 export default function(ctx, planet, cx_cy, central_latitude, central_longitude){

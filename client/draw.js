@@ -1,10 +1,10 @@
 var hsltorgb = require('../lib/hsltorgb');
-import projection_cyl from './projection_cyl';
-import map from './map';
-import map_pixel from './map_pixel';
-import map_thermal from './map_thermal';
-import globe from './globe';
-import legend from './legend';
+import projection_cyl from './map/projection_cyl';
+import map from './map/map';
+import map_pixel from './map/map_pixel';
+import map_thermal from './map/map_thermal';
+import globe from './map/globe';
+import legend from './map/legend';
 
 import settings from './settings';
 
@@ -166,6 +166,7 @@ export default function(id, planet, callback){
     ctx.stroke();
     ctx.setLineDash([]);
 
+    ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'white';
@@ -194,6 +195,7 @@ export default function(id, planet, callback){
     ctx.fillText(text,0,0);
     ctx.restore();
 
+    ctx.restore();
 
   }
 
