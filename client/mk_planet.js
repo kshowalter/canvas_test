@@ -13,6 +13,8 @@ export default function(planet_name){
   planet.radius = 6000; // average, km
   planet.radius_deviation = 10; // +/- km
   planet.sealevel = planet.radius + ( planet.radius_deviation*2 * 0.6 - planet.radius_deviation );
+  planet.max_altitude = planet.radius + planet.radius_deviation - planet.sealevel;
+  planet.max_depth = planet.sealevel - (planet.radius - planet.radius_deviation);
 
   var sensor = mk_sensor(planet);
 
@@ -73,7 +75,7 @@ export default function(planet_name){
     if( measurment.altitude > 0 ){
       potential_city_values.altitude = Math.pow(max_altitude-measurment.altitude,3)/Math.pow(max_altitude,3) * 100;
     } else {
-      var depth = planet.sealevel-measurment.altitude;
+      var depth = -measurment.altitude ;
       potential_city_values.altitude = - Math.pow(depth,0.5)/Math.pow(max_depth,0.5)*100;
     }
     potential_city_values.temperature = 100-Math.pow(Math.abs(15-measurment.temperature),0.5)/Math.pow(15,0.5)*100;

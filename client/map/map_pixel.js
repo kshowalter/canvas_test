@@ -1,6 +1,8 @@
 import settings from '../settings';
 
-export default function(ctx, planet, cx_cy){
+export default function(ctx, planet, x, y){
+  var cx = x;
+  var cy = y;
   var r,g,b,a;
 
   var map_width = settings.map_width;
@@ -24,14 +26,12 @@ export default function(ctx, planet, cx_cy){
       var biome_rgb;
       if( measurment.altitude < 0 ) {
         biome_rgb = settings.rgb.biome['water'];
-        a = 128;
       } else {
         biome_rgb = settings.rgb.biome[measurment.biome_name];
-        a = 255;
       }
 
       var i = ( ix + iy*map_width ) * 4;
-      //a = 255;
+      a = 255;
       r = biome_rgb[0];
       g = biome_rgb[1];
       b = biome_rgb[2];
@@ -43,7 +43,7 @@ export default function(ctx, planet, cx_cy){
     }
   }
 
-  ctx.putImageData(img_data_map, cx_cy[0], cx_cy[1]);
+  //ctx.putImageData(img_data_map, cx, cy);
 
-
+  return img_data_map;
 }

@@ -49,13 +49,13 @@ var refine = function refine(){
     //*
     if( settings.pixelation > 1 ){
       settings.pixelation = 1;
-      refine();
+      requestAnimationFrame(refine);
     }
-    if( settings.pixelation < 0.5 ){
+    if( settings.pixelation < 1 ){
       settings.pixelation *= 2;
       if( settings.pixelation > 1 ){ settings.pixelation = 1; }
       setTimeout(function(){
-        refine();
+        requestAnimationFrame(refine);
       }, 100);
     }
     if( settings.pixelation === 1 ){

@@ -1,7 +1,7 @@
-export default {
+var settings = {
   map_width: 360*2,
   map_height: 180*2,
-  globe_map_size: 350,
+  globe_map_size: 360,
   rgb: {
     biome: {
       'space': [0, 0, 0],
@@ -16,3 +16,7 @@ export default {
   },
   pixelation: 0.5
 };
+
+settings.globe_size = settings.globe_map_size * 0.9;
+
+export default settings;

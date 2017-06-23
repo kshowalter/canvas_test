@@ -1,4 +1,5 @@
 import settings from '../settings';
+var hsltorgb = require('../lib/hsltorgb');
 
 var map_width = settings.map_width;
 var map_height = settings.map_height;
