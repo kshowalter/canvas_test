@@ -17,6 +17,14 @@ var global = window || global;
 global.logger = console.log;
 global.f = f;
 global.settings = settings;
+global.start_time = new Date();
+sessionStorage.load_times = sessionStorage.load_times || '';
+global.to_inspect = {
+  samples: 0,
+  reused: 0,
+  calculated: 0
+};
+global.measurments = {};
 
 //var target_element = document.getElementById('content');
 var target_element = $('#content');
@@ -50,16 +58,23 @@ var refine = function refine(){
     if( settings.pixelation > 1 ){
       settings.pixelation = 1;
       requestAnimationFrame(refine);
-    }
-    if( settings.pixelation < 1 ){
+    } else if( settings.pixelation < 1 ){
       settings.pixelation *= 2;
       if( settings.pixelation > 1 ){ settings.pixelation = 1; }
       setTimeout(function(){
         requestAnimationFrame(refine);
       }, 100);
-    }
-    if( settings.pixelation === 1 ){
+    } else if( settings.pixelation === 1 ){
       console.log('FULL resolultion [XX]');
+      global.end_time = new Date();
+      global.load_time = ( global.end_time - global.start_time );
+      sessionStorage.load_times += ','+ global.load_time;
+      var load_times = sessionStorage.load_times.split(',');
+      console.log(global.to_inspect);
+      console.log(load_times);
+      console.log('load improvment: ', load_times.slice(-2,-1)-load_times.slice(-1));
+    } else {
+      console.log('FORGOT SOMETHING');
     }
     //*/
   });

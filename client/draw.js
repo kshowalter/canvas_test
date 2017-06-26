@@ -38,20 +38,20 @@ export default function(id, planet, callback){
     //ctx.restore();
 
 
-    //disableSmoothRendering(ctx);
+    disableSmoothRendering(ctx);
 
     var cx = 10;
     var cy = 10;
-    //var img_data_map = map_pixel(ctx, planet, cx, cy);
-    //ctx.putImageData(img_data_map, cx, cy);
-    //ctx.drawImage(canvas, cx, cy, map_width*settings.pixelation, map_height*settings.pixelation, cx, cy, map_width, map_height);
-    //map_pixel_overlay(ctx, planet, [cx,cy]);
+    var img_data_map = map_pixel(ctx, planet, cx, cy);
+    ctx.putImageData(img_data_map, cx, cy);
+    ctx.drawImage(canvas, cx, cy, map_width*settings.pixelation, map_height*settings.pixelation, cx, cy, map_width, map_height);
+    map_pixel_overlay(ctx, planet, [cx,cy]);
 
     cx = 10 + map_width + 40;
     cy = 10;
 
 
-    //legend(ctx, planet, [cx,cy]);
+    legend(ctx, planet, [cx,cy]);
 
 
     cx = 10;

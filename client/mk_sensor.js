@@ -18,6 +18,17 @@ var to_cartesian = function(r,lat,lon){
   return [x,y,z];
 };
 
+// https://stackoverflow.com/a/15762794
+function roundTo(n, digits) {
+  if (digits === undefined) {
+    digits = 0;
+  }
+
+  var multiplicator = Math.pow(10, digits);
+  n = parseFloat((n * multiplicator).toFixed(11));
+  var test =(Math.round(n) / multiplicator);
+  return +(test.toFixed(digits));
+}
 
 export default function(planet){
   noise.seed(planet.name);
@@ -29,62 +40,82 @@ export default function(planet){
 
   var sensor = function(coor){
     var longitude_sensor_correction_factor = planet.longitude_sensor_correction_factor || 0;
-    var measurment = {
-      coor: coor
-    };
-    var lon = coor[0] + longitude_sensor_correction_factor;
     var lat = coor[1];
-
-    var location = measurment.location = to_cartesian(planet.radius,lat,lon);
-
-    // All noise functions return values in the range of -1 to 1.
-    var radius_deviation_factor = noise.simplex3( location[0]/continent_factor, location[1]/continent_factor, location[2]/continent_factor );
-    var radius_deviation_factor_noise = noise.simplex3( location[0]/continent_noise_factor, location[1]/continent_noise_factor, location[2]/continent_noise_factor );
-    var termperature_noise = noise.simplex3( location[0]/temperature_factor, location[1]/temperature_factor, location[2]/temperature_factor );
-    var rain_noise = noise.simplex3( location[0]/rain_factor, location[1]/rain_factor, location[2]/rain_factor );
-
-    radius_deviation_factor_noise *= 0.2;
-    radius_deviation_factor += radius_deviation_factor_noise;
-    measurment.radius_deviation_factor = radius_deviation_factor;
-
-    var altitude_factor = ( ( measurment.radius_deviation_factor + 1 ) - ( planet.sealevel + 1 ) )/2;
-
-    measurment.radius = planet.radius + measurment.radius_deviation_factor * planet.radius_deviation;
-    measurment.altitude = measurment.radius - planet.sealevel;
+    var lon = coor[0] + longitude_sensor_correction_factor;
+    lat = Number( lat.toFixed(2) );
+    lon = Number( lon.toFixed(2) );
+    //lon = roundTo( lon, 2 );
+    //lat = roundTo( lat, 2 );
+    //global.to_inspect.lons = global.to_inspect.lons || {};
+    //global.to_inspect.lons[lon%1] = global.to_inspect.lons[lon%1] ? global.to_inspect.lons[lon%1]+1 : 1;
 
 
-
-    // max avg temp = 30
-    // min avg temp = -30
-    var temperature = ( (90-Math.abs(lat))/90 * 60 - 30 ) + ( radius_deviation_factor * 5 ) + ( termperature_noise * 2 );
-    measurment.temperature = temperature;
-
-    // Mean annual rainfall (cm)
-    // range 0-350+ cm
-    var rainfall = 300 - ( Math.abs(radius_deviation_factor) * 250 ) + ( rain_noise * 50 );
-    measurment.rainfall = rainfall;
-
-    var biome_name;
-    if( temperature > 5 ){
-      if( rainfall < 40 ){
-        biome_name = 'desert';
-      } else if( rainfall < 75){
-        biome_name = 'plains';
-      } else if( rainfall < 200){
-        biome_name = 'temperate forest';
-      } else {
-        biome_name = 'tropical forest';
-      }
+    global.to_inspect.samples++;
+    var measurment;
+    if( global.measurments[lat+'_'+lon] ){
+      global.to_inspect.reused++;
+      measurment = global.measurments[lat+'_'+lon];
+      return measurment;
     } else {
-      if( rainfall < 150 ){
-        biome_name = 'tundra';
-      } else {
-        biome_name = 'polar';
-      }
-    }
-    measurment.biome_name = biome_name;
+      global.to_inspect.calculated++;
+      measurment = {
+        coor: coor
+      };
 
-    return measurment;
+      var location = measurment.location = to_cartesian(planet.radius,lat,lon);
+
+      // All noise functions return values in the range of -1 to 1.
+      var radius_deviation_factor = noise.simplex3( location[0]/continent_factor, location[1]/continent_factor, location[2]/continent_factor );
+      var radius_deviation_factor_noise = noise.simplex3( location[0]/continent_noise_factor, location[1]/continent_noise_factor, location[2]/continent_noise_factor );
+      var termperature_noise = noise.simplex3( location[0]/temperature_factor, location[1]/temperature_factor, location[2]/temperature_factor );
+      var rain_noise = noise.simplex3( location[0]/rain_factor, location[1]/rain_factor, location[2]/rain_factor );
+
+      radius_deviation_factor_noise *= 0.2;
+      radius_deviation_factor += radius_deviation_factor_noise;
+      measurment.radius_deviation_factor = radius_deviation_factor;
+
+      var altitude_factor = ( ( measurment.radius_deviation_factor + 1 ) - ( planet.sealevel + 1 ) )/2;
+
+      measurment.radius = planet.radius + measurment.radius_deviation_factor * planet.radius_deviation;
+      measurment.altitude = measurment.radius - planet.sealevel;
+
+
+
+      // max avg temp = 30
+      // min avg temp = -30
+      var temperature = ( (90-Math.abs(lat))/90 * 60 - 30 ) + ( radius_deviation_factor * 5 ) + ( termperature_noise * 2 );
+      measurment.temperature = temperature;
+
+      // Mean annual rainfall (cm)
+      // range 0-350+ cm
+      var rainfall = 300 - ( Math.abs(radius_deviation_factor) * 250 ) + ( rain_noise * 50 );
+      measurment.rainfall = rainfall;
+
+      var biome_name;
+      if( temperature > 5 ){
+        if( rainfall < 40 ){
+          biome_name = 'desert';
+        } else if( rainfall < 75){
+          biome_name = 'plains';
+        } else if( rainfall < 200){
+          biome_name = 'temperate forest';
+        } else {
+          biome_name = 'tropical forest';
+        }
+      } else {
+        if( rainfall < 150 ){
+          biome_name = 'tundra';
+        } else {
+          biome_name = 'polar';
+        }
+      }
+      measurment.biome_name = biome_name;
+
+      //global.measurments[lat] = global.measurments[lat] || [];
+      global.measurments[lat+'_'+lon] = measurment;
+      return measurment;
+
+    }
   };
 
 
