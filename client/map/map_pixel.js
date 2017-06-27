@@ -1,16 +1,16 @@
 import settings from '../settings';
 
-export default function(ctx, planet, x, y){
+export default function(planet, x, y, pixelation, callback){
   var cx = x;
   var cy = y;
   var r,g,b,a;
 
   var map_width = settings.map_width;
   var map_height = settings.map_height;
-  map_width *= settings.pixelation;
-  map_height *= settings.pixelation;
+  map_width *= pixelation;
+  map_height *= pixelation;
 
-  var img_data_map = ctx.createImageData(map_width, map_height);
+  var img_data_map = new ImageData(map_width, map_height);
 
   for (var ix = 0; ix <= map_width; ix++) {
     for (var iy = 0; iy <= map_height; iy++) {
@@ -45,5 +45,6 @@ export default function(ctx, planet, x, y){
 
   //ctx.putImageData(img_data_map, cx, cy);
 
-  return img_data_map;
+  //return img_data_map;
+  callback(img_data_map, x, y);
 }

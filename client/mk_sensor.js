@@ -39,13 +39,19 @@ export default function(planet){
   var rain_factor = 4200;
 
   var sensor = function(coor){
+    var timer = global.Timer();
+
     var longitude_sensor_correction_factor = planet.longitude_sensor_correction_factor || 0;
     var lat = coor[1];
     var lon = coor[0] + longitude_sensor_correction_factor;
-    lat = Number( lat.toFixed(2) );
-    lon = Number( lon.toFixed(2) );
-    //lon = roundTo( lon, 2 );
-    //lat = roundTo( lat, 2 );
+    //lat = Number( lat.toFixed(1) );
+    //lon = Number( lon.toFixed(1) );
+    lon = roundTo( lon, 1 );
+    lat = roundTo( lat, 1 );
+    //var lat_fraction = Number(( (lat %1) * 4 ).toFixed(0))/4;
+    //var lon_fraction = Number(( (lon %1) * 4 ).toFixed(0))/4;
+    //lat = Number( lat.toFixed(0) ) + lat_fraction;
+    //lon = Number( lon.toFixed(0) ) + lon_fraction;
     //global.to_inspect.lons = global.to_inspect.lons || {};
     //global.to_inspect.lons[lon%1] = global.to_inspect.lons[lon%1] ? global.to_inspect.lons[lon%1]+1 : 1;
 
@@ -54,6 +60,7 @@ export default function(planet){
     var measurment;
     if( global.measurments[lat+'_'+lon] ){
       global.to_inspect.reused++;
+      //global.to_inspect.reused_anal(timer());
       measurment = global.measurments[lat+'_'+lon];
       return measurment;
     } else {
@@ -113,6 +120,7 @@ export default function(planet){
 
       //global.measurments[lat] = global.measurments[lat] || [];
       global.measurments[lat+'_'+lon] = measurment;
+      //global.to_inspect.calculated_anal(timer());
       return measurment;
 
     }

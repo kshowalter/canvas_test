@@ -1,39 +1,60 @@
 import globe from './globe';
-import globes_overlay from './globes_overlay';
+
 
 import settings from '../settings';
 
-export default function(ctx, planet, x, y){
-  var cx = x;
-  var cy = y;
 
-  var globe_map_size = settings.globe_map_size;
-  var globe_map_size_adjusted = Math.ceil(globe_map_size*settings.pixelation);
+export default function(planet, map_settings, callback){
 
-  ctx.fillStyle = 'black';
-  ctx.fillRect(cx, cy, globe_map_size*3, globe_map_size*3);
+  //var map_settings = JSON.parse(JSON.stringify(settings));
+  //map_settings.ctx = ctx;
 
-  cx += globe_map_size;
-  globe(ctx, planet, cx, cy, 90, 0);
-  ctx.drawImage(ctx.canvas, cx, cy, globe_map_size_adjusted, globe_map_size_adjusted, cx, cy, globe_map_size, globe_map_size);
-  cx -= globe_map_size;
-  cy += globe_map_size;
-  globe(ctx, planet, cx, cy, 0, -1*360/3);
-  ctx.drawImage(ctx.canvas, cx, cy, globe_map_size_adjusted, globe_map_size_adjusted, cx, cy, globe_map_size, globe_map_size);
-  cx += globe_map_size;
-  globe(ctx, planet, cx, cy, 0, 0);
-  ctx.drawImage(ctx.canvas, cx, cy, globe_map_size_adjusted, globe_map_size_adjusted, cx, cy, globe_map_size, globe_map_size);
-  cx += globe_map_size;
-  globe(ctx, planet, cx, cy, 0, 1*360/3);
-  ctx.drawImage(ctx.canvas, cx, cy, globe_map_size_adjusted, globe_map_size_adjusted, cx, cy, globe_map_size, globe_map_size);
-  cx -= globe_map_size;
-  cy += globe_map_size;
-  globe(ctx, planet, cx, cy, -90, 0);
-  ctx.drawImage(ctx.canvas, cx, cy, globe_map_size_adjusted, globe_map_size_adjusted, cx, cy, globe_map_size, globe_map_size);
+  map_settings.globe_map_size_adjusted = Math.ceil(map_settings.globe_map_size*map_settings.pixelation);
 
-  cx = x;
-  cy = y;
-  globes_overlay(ctx, planet, cx, cy);
+  var img_data_map = new ImageData( map_settings.globe_map_size_adjusted*3, map_settings.globe_map_size_adjusted*3 );
+  img_data_map.data.forEach(function(x,i){
+    if( (i+1)%4 === 0 ){
+      img_data_map.data[i] = 255;
+    }
+  });
 
-  //*/
+
+  map_settings.cx = 0;
+  map_settings.cy = 0;
+
+  //ctx.fillStyle = 'black';
+  //ctx.fillRect(map_settings.cx, map_settings.cy, map_settings.globe_map_size*3, map_settings.globe_map_size*3);
+
+  map_settings.cx += map_settings.globe_map_size_adjusted;
+  map_settings.central_latitude = 90;
+  map_settings.central_longitude = 0;
+  img_data_map = globe(planet, map_settings, img_data_map);
+
+  map_settings.cx -= map_settings.globe_map_size_adjusted;
+  map_settings.cy += map_settings.globe_map_size_adjusted;
+  map_settings.central_latitude = 0;
+  map_settings.central_longitude = -1*360/3;
+  img_data_map = globe(planet, map_settings, img_data_map);
+
+  map_settings.cx += map_settings.globe_map_size_adjusted;
+  //map_settings.cy += map_settings.globe_map_size_adjusted;
+  map_settings.central_latitude = 0;
+  map_settings.central_longitude = 0;
+  img_data_map = globe(planet, map_settings, img_data_map);
+
+  map_settings.cx += map_settings.globe_map_size_adjusted;
+  //map_settings.cy += map_settings.globe_map_size_adjusted;
+  map_settings.central_latitude = 0;
+  map_settings.central_longitude = 1*360/3;
+  img_data_map = globe(planet, map_settings, img_data_map);
+
+  map_settings.cx -= map_settings.globe_map_size_adjusted;
+  map_settings.cy += map_settings.globe_map_size_adjusted;
+  map_settings.central_latitude = -90;
+  map_settings.central_longitude = 0;
+  img_data_map = globe(planet, map_settings, img_data_map);
+
+
+
+  callback(img_data_map, map_settings);
 }

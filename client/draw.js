@@ -1,8 +1,9 @@
 import map_pixel from './map/map_pixel';
 import map_pixel_overlay from './map/map_pixel_overlay';
 //import map_thermal from './map/map_thermal';
-import globes from './map/globes';
 import legend from './map/legend';
+import globes from './map/globes';
+import globes_overlay from './map/globes_overlay';
 
 import settings from './settings';
 
@@ -42,10 +43,11 @@ export default function(id, planet, callback){
 
     var cx = 10;
     var cy = 10;
-    var img_data_map = map_pixel(ctx, planet, cx, cy);
-    ctx.putImageData(img_data_map, cx, cy);
-    ctx.drawImage(canvas, cx, cy, map_width*settings.pixelation, map_height*settings.pixelation, cx, cy, map_width, map_height);
-    map_pixel_overlay(ctx, planet, [cx,cy]);
+    map_pixel(planet, cx, cy, settings.pixelation, function(img_data_map, cx, cy){
+      ctx.putImageData(img_data_map, cx, cy);
+      ctx.drawImage(canvas, cx, cy, map_width*settings.pixelation, map_height*settings.pixelation, cx, cy, map_width, map_height);
+      map_pixel_overlay(ctx, planet, [cx,cy]);
+    });
 
     cx = 10 + map_width + 40;
     cy = 10;
@@ -53,10 +55,28 @@ export default function(id, planet, callback){
 
     legend(ctx, planet, [cx,cy]);
 
+    var map_settings = JSON.parse(JSON.stringify(settings));
+    map_settings.pixelation = settings.pixelation;
 
     cx = 10;
     cy = 10 + map_height + 10 + 50;
-    globes(ctx, planet, cx, cy);
+    globes(planet, map_settings, function(img_data_map, map_settings){
+      ctx.fillStyle = 'black';
+      ctx.fillRect(cx, cy, map_settings.globe_map_size*3, map_settings.globe_map_size*3);
+      ctx.putImageData(img_data_map, cx, cy);
+      //*
+      ctx.drawImage(ctx.canvas,
+        cx, cy,
+        map_settings.globe_map_size_adjusted*3,
+        map_settings.globe_map_size_adjusted*3,
+        cx, cy,
+        map_settings.globe_map_size*3,
+        map_settings.globe_map_size*3
+      );
+      //*/
+
+      globes_overlay(ctx, planet, cx, cy);
+    });
 
 
   }

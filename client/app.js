@@ -12,19 +12,67 @@ import f from 'functions';
 import draw from './draw';
 import mk_planet from './mk_planet';
 import settings from './settings';
+var Analysis = require('./function/Analysis');
+var Timer = require('./function/Timer');
 
 var global = window || global;
+
+global.Analysis = Analysis;
+global.Timer = Timer;
+
 global.logger = console.log;
 global.f = f;
 global.settings = settings;
-global.start_time = new Date();
 sessionStorage.load_times = sessionStorage.load_times || '';
 global.to_inspect = {
   samples: 0,
   reused: 0,
-  calculated: 0
+  calculated: 0,
+  calculated_anal: Analysis(),
+  reused_anal: Analysis(),
+  load_time: Timer()
 };
 global.measurments = {};
+
+
+/*
+var indexedDB = window.indexedDB;
+// Open (or create) the database
+var measurments = indexedDB.open('measurments', 1);
+
+measurments.onupgradeneeded = function(e) {
+  var db = e.target.result;
+
+  e.target.transaction.onerror = tDB.onerror;
+
+  // Delete the old datastore.
+  if (db.objectStoreNames.contains('todo')) {
+    db.deleteObjectStore('todo');
+  }
+
+  // Create a new datastore.
+  var store = db.createObjectStore('todo', {
+    keyPath: 'timestamp'
+  });
+};
+
+
+// Handle successful datastore access.
+request.onsuccess = function(e) {
+  // Get a reference to the DB.
+  datastore = e.target.result;
+
+  // Execute the callback.
+  callback();
+};
+
+// Handle errors when opening the datastore.
+request.onerror = tDB.onerror;
+*/
+
+
+
+
 
 //var target_element = document.getElementById('content');
 var target_element = $('#content');
@@ -66,13 +114,8 @@ var refine = function refine(){
       }, 100);
     } else if( settings.pixelation === 1 ){
       console.log('FULL resolultion [XX]');
-      global.end_time = new Date();
-      global.load_time = ( global.end_time - global.start_time );
-      sessionStorage.load_times += ','+ global.load_time;
-      var load_times = sessionStorage.load_times.split(',');
-      console.log(global.to_inspect);
-      console.log(load_times);
-      console.log('load improvment: ', load_times.slice(-2,-1)-load_times.slice(-1));
+      final_analysis();
+      //console.log(load_times);
     } else {
       console.log('FORGOT SOMETHING');
     }
@@ -83,6 +126,17 @@ var refine = function refine(){
 
 };
 
+
+var final_analysis = function(){
+  global.to_inspect.calculated_anal = global.to_inspect.calculated_anal();
+  global.to_inspect.reused_anal = global.to_inspect.reused_anal();
+  global.to_inspect.load_time = global.to_inspect.load_time();
+
+  sessionStorage.load_times += ','+ global.to_inspect.load_time;
+  var load_times = sessionStorage.load_times.split(',');
+  console.log('load improvment: ', load_times.slice(-2,-1)-load_times.slice(-1));
+  console.log(global.to_inspect);
+};
 
 window.onload = function(){
   refine();
