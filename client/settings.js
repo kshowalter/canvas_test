@@ -14,7 +14,7 @@ var settings = {
       'polar': [250,252,253],
     }
   },
-  pixelation: 0.5
+  pixelation: 0.25
 };
 
 settings.globe_size = settings.globe_map_size * 0.9;

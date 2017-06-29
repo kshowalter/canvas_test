@@ -8,8 +8,10 @@ import merge_cities from './function/merge_cities';
 
 
 export default function(planet_name){
+  console.log( 'TRAVELING TO: ', planet_name );
   var planet = {};
 
+  planet.name = planet_name;
   planet.radius = 6000; // average, km
   planet.radius_deviation = 10; // +/- km
   planet.sealevel = planet.radius + ( planet.radius_deviation*2 * 0.6 - planet.radius_deviation );
@@ -30,13 +32,13 @@ export default function(planet_name){
   var water_count = 0;
   for (var lon = -179; lon <= 180; lon++) {
     var lon_water_level = 0;
-    for (var lat = -30; lat <= 30; lat++) {
+    for (var lat = -60; lat <= 60; lat++) {
       var measurment = planet.sensor([lon,lat]);
       if( measurment.altitude < 0 ) {
         lon_water_level++;
       }
     }
-    if( lon_water_level > 55 ){
+    if( lon_water_level > 60*2*0.95 ){
       water_count++;
     } else {
       water_count = 0;

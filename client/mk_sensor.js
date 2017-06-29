@@ -1,3 +1,4 @@
+import Chance from 'chance';
 var noise = require('../lib/noisejs/perlin');
 
 
@@ -31,7 +32,11 @@ function roundTo(n, digits) {
 }
 
 export default function(planet){
-  noise.seed(planet.name);
+  console.log( 'SCANNING: ', planet.name );
+  var chance = Chance(planet.name);
+  var noise_seed = chance.floating({min:0,max:1});
+
+  noise.seed(noise_seed);
 
   var continent_factor = 6000;
   var continent_noise_factor = 1500;
@@ -55,13 +60,14 @@ export default function(planet){
     //global.to_inspect.lons = global.to_inspect.lons || {};
     //global.to_inspect.lons[lon%1] = global.to_inspect.lons[lon%1] ? global.to_inspect.lons[lon%1]+1 : 1;
 
+    var measurment_id = planet.name+'_'+lat+'_'+lon;
 
     global.to_inspect.samples++;
     var measurment;
-    if( global.measurments[lat+'_'+lon] ){
+    if( global.measurments[measurment_id] ){
       global.to_inspect.reused++;
       //global.to_inspect.reused_anal(timer());
-      measurment = global.measurments[lat+'_'+lon];
+      measurment = global.measurments[measurment_id];
       return measurment;
     } else {
       global.to_inspect.calculated++;
@@ -119,7 +125,7 @@ export default function(planet){
       measurment.biome_name = biome_name;
 
       //global.measurments[lat] = global.measurments[lat] || [];
-      global.measurments[lat+'_'+lon] = measurment;
+      global.measurments[measurment_id] = measurment;
       //global.to_inspect.calculated_anal(timer());
       return measurment;
 
