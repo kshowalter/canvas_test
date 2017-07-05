@@ -35,7 +35,10 @@ global.to_inspect = {
 };
 global.measurments = {};
 
+
+
 var router = hash_router(function(selection){
+  // selection = [ galaxy, section, system, planet, location(city, ...) ]
   console.log('ROUTING...');
   if(selection){
     global.to_inspect = {
@@ -47,13 +50,16 @@ var router = hash_router(function(selection){
       load_time: Timer()
     };
     settings.pixelation = 0.25;
-    var planet_name = selection[0];
+    var planet_name = selection[3];
     console.log('DESTINTATION SELECTED: ', planet_name);
     var planet = mk_planet( selection[0] );
     console.log( planet_name, ' details: ', planet);
-    refine(planet);
+    //refine(planet);
   } else {
-    var home = 'Idoria';
+    // 27,200 light-years earth to center
+    // milkyway 100-180 kly diameter
+    // 2 kly thick
+    var home = '0/0/Sol/Idoria';
     console.log('no planet selection, going home: ', home);
     router(home);
   }
@@ -61,40 +67,69 @@ var router = hash_router(function(selection){
 
 
 
-/*
-var indexedDB = window.indexedDB;
+
+
+
+
+
+// This works on all devices/browsers, and uses IndexedDBShim as a final fallback
+var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
 // Open (or create) the database
-var measurments = indexedDB.open('measurments', 1);
+var request = indexedDB.open('GalacticDatabase', 5);
 
-measurments.onupgradeneeded = function(e) {
-  var db = e.target.result;
-
-  e.target.transaction.onerror = tDB.onerror;
+// Create the schema
+request.onupgradeneeded = function() {
+  console.log('onupgradeneeded');
+  var db = request.result;
+  var object_store_name = 'measurments';
 
   // Delete the old datastore.
-  if (db.objectStoreNames.contains('todo')) {
-    db.deleteObjectStore('todo');
+  if (db.objectStoreNames.contains(object_store_name)) {
+    db.deleteObjectStore(object_store_name);
   }
+  var store = db.createObjectStore(object_store_name, {keyPath: 'id'});
+  var index = store.createIndex('location', ['planet','location.lat', 'location.lon']);
+};
 
-  // Create a new datastore.
-  var store = db.createObjectStore('todo', {
-    keyPath: 'timestamp'
-  });
+var store;
+var index;
+
+request.onsuccess = function() {
+  console.log('onsuccess');
+  // Start a new transaction
+  var db = request.result;
+  var tx = db.transaction('measurments', 'readwrite');
+  store = tx.objectStore('measurments');
+  var index = store.index('location');
+
+  // Add some data
+  var id = 42;
+  store.put({id: id++, planet: 'planet9', location: {lat: 10, lon:20}, value: Math.random() });
+  store.put({id: id++, planet: 'planet9', location: {lat: 11, lon:20}, value: Math.random() });
+
+  // Query the data
+  store.get(43).onsuccess = function(e) {
+    console.log(e.target.result);
+  };
+
+  index.get(['planet9', 10, 20]).onsuccess = function(e) {
+    console.log(e.target.result);
+  };
+
+  // Close the db when the transaction is done
+  tx.oncomplete = function() {
+    console.log('DB DONE');
+    db.close();
+  };
+};
+
+request.onerror = function(event){
+  console.log('error', event);
+
 };
 
 
-// Handle successful datastore access.
-request.onsuccess = function(e) {
-  // Get a reference to the DB.
-  datastore = e.target.result;
-
-  // Execute the callback.
-  callback();
-};
-
-// Handle errors when opening the datastore.
-request.onerror = tDB.onerror;
-*/
 
 
 
