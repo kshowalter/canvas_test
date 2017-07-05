@@ -1,5 +1,5 @@
 {
-  "name": "canvas_test",
+  "name": "galactipedia_map",
   "version": "0.1.0",
   "description": "Test creation of canvas element.",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kshowalter/canvas_test.git"
+    "url": "git+https://github.com/kshowalter/galactipedia_map.git"
   },
   "author": "Keith Showalter",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kshowalter/canvas_test/issues"
+    "url": "https://github.com/kshowalter/galactipedia_map/issues"
   },
-  "homepage": "https://github.com/kshowalter/canvas_test#readme",
+  "homepage": "https://github.com/kshowalter/galactipedia_map#readme",
   "dependencies": {
     "chance": "^1.0.8",
     "functions": "kshowalter/functions",
