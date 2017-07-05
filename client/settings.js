@@ -1,7 +1,12 @@
 var settings = {
-  map_width: 360*2,
-  map_height: 180*2,
-  globe_map_size: 360,
+  map: {
+    projection:{
+      width: 360*2,
+      height: 180*2
+    },
+    globe_size: 360,
+    sector: 500,
+  },
   rgb: {
     biome: {
       'space': [0, 0, 0],
@@ -17,6 +22,6 @@ var settings = {
   pixelation: 0.25
 };
 
-settings.globe_size = settings.globe_map_size * 0.9;
+settings.globe_size = settings.map.globe_size * 0.9;
 
 export default settings;

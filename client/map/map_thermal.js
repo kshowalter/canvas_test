@@ -1,8 +1,8 @@
 import settings from '../settings';
 var hsltorgb = require('../lib/hsltorgb');
 
-var map_width = settings.map_width;
-var map_height = settings.map_height;
+var map_width = settings.map.projection.width;
+var map_height = settings.map.projection.height;
 
 export default function(ctx, measurments, location){
   var img_data_temperature = ctx.createImageData(map_width, map_height);

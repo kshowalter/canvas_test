@@ -1,6 +1,6 @@
 import Chance from 'chance';
 import settings from './settings';
-import mk_sensor from './mk_sensor';
+import mk_planet_sensor from './mk_planet_sensor';
 import f from 'functions';
 import great_circle_distance from './function/great_circle_distance';
 import merge_cities from './function/merge_cities';
@@ -9,6 +9,7 @@ import merge_cities from './function/merge_cities';
 
 export default function(planet_name){
   console.log( 'TRAVELING TO: ', planet_name );
+  var chance = Chance(planet_name);
   var planet = {};
 
   planet.name = planet_name;
@@ -18,9 +19,8 @@ export default function(planet_name){
   planet.max_altitude = planet.radius + planet.radius_deviation - planet.sealevel;
   planet.max_depth = planet.sealevel - (planet.radius - planet.radius_deviation);
 
-  var sensor = mk_sensor(planet);
+  var sensor = mk_planet_sensor(planet);
 
-  var chance = Chance(planet_name);
 
   planet.sensor = sensor;
 

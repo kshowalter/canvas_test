@@ -7,9 +7,9 @@ import globes_overlay from './map/globes_overlay';
 
 import settings from './settings';
 
-var map_width = settings.map_width;
-var map_height = settings.map_height;
-var globe_map_size = settings.globe_map_size;
+var map_width = settings.map.projection.width;
+var map_height = settings.map.projection.height;
+var globe_map_size = settings.map.globe_size;
 
 function disableSmoothRendering(ctx) {
   ctx.webkitImageSmoothingEnabled = false;
@@ -64,16 +64,16 @@ export default function(id, planet, callback){
     cy = 10 + map_height + 10 + 50;
     globes(planet, map_settings, function(img_data_map, map_settings){
       ctx.fillStyle = 'black';
-      ctx.fillRect(cx, cy, map_settings.globe_map_size*3, map_settings.globe_map_size*3);
+      ctx.fillRect(cx, cy, map_settings.map.globe_size*3, map_settings.map.globe_size*3);
       ctx.putImageData(img_data_map, cx, cy);
       //*
       ctx.drawImage(ctx.canvas,
         cx, cy,
-        map_settings.globe_map_size_adjusted*3,
-        map_settings.globe_map_size_adjusted*3,
+        map_settings.map.globe_size_adjusted*3,
+        map_settings.map.globe_size_adjusted*3,
         cx, cy,
-        map_settings.globe_map_size*3,
-        map_settings.globe_map_size*3
+        map_settings.map.globe_size*3,
+        map_settings.map.globe_size*3
       );
       //*/
 

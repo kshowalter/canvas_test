@@ -1,7 +1,7 @@
 import settings from '../settings';
 
-var map_width = settings.map_width;
-var map_height = settings.map_height;
+var map_width = settings.map.projection.width;
+var map_height = settings.map.projection.height;
 
 export default function(ctx, coor_details, cx_cy){
   var r,g,b,a;

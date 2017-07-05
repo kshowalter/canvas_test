@@ -2,8 +2,8 @@ import settings from '../settings';
 
 export default function(ctx, planet, cx_cy){
 
-  var map_width = settings.map_width;
-  var map_height = settings.map_height;
+  var map_width = settings.map.projection.width;
+  var map_height = settings.map.projection.height;
   //map_width *= settings.pixelation;
   //map_height *= settings.pixelation;
 

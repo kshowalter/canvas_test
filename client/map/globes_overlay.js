@@ -1,9 +1,9 @@
 import settings from '../settings';
 import projection_orthographic from './projection_orthographic';
 
-var map_width = settings.map_width;
-var map_height = settings.map_height;
-var globe_map_size = settings.globe_map_size;
+var map_width = settings.map.projection.width;
+var map_height = settings.map.projection.height;
+var globe_map_size = settings.map.globe_size;
 var globe_size = settings.globe_size;
 
 export default function(ctx, planet, cx, cy){

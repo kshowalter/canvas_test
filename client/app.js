@@ -10,9 +10,13 @@ import $ from 'simpledom';
 import f from 'functions';
 import hash_router from 'hash_router';
 
-import draw from './draw';
-import mk_planet from './mk_planet';
 import settings from './settings';
+
+import mk_sector from './mk_planet';
+import draw_sector from './draw_sector';
+import mk_planet from './mk_planet';
+import draw_planet from './draw_planet';
+
 var Analysis = require('./function/Analysis');
 var Timer = require('./function/Timer');
 
@@ -25,40 +29,58 @@ global.logger = console.log;
 global.f = f;
 global.settings = settings;
 sessionStorage.load_times = sessionStorage.load_times || '';
-global.to_inspect = {
-  samples: 0,
-  reused: 0,
-  calculated: 0,
-  calculated_anal: Analysis(),
-  reused_anal: Analysis(),
-  load_time: Timer()
-};
 global.measurments = {};
 
 
 
 var router = hash_router(function(selection){
-  // selection = [ galaxy, section, system, planet, location(city, ...) ]
+  // selection = [ galaxy, sector, system, planet, location(city, ...) ]
+  // 27,200 light-years earth to center
+  // milkyway 100-180 kly diameter
+  // 2 kly thick
   console.log('ROUTING...');
   if(selection){
-    global.to_inspect = {
-      samples: 0,
-      reused: 0,
-      calculated: 0,
-      calculated_anal: Analysis(),
-      reused_anal: Analysis(),
-      load_time: Timer()
-    };
-    settings.pixelation = 0.25;
-    var planet_name = selection[3];
-    console.log('DESTINTATION SELECTED: ', planet_name);
-    var planet = mk_planet( selection[0] );
-    console.log( planet_name, ' details: ', planet);
-    //refine(planet);
+    if( selection.slice(-1) === '' ){
+      selection = selection.slice(0,-1);
+    }
+    console.log('selection', selection);
+    if( selection.length === 0 ) { // unknown
+      console.log('DESTINTATION UNKNOWN');
+      var home = '0';
+      console.log('TRAVELING TO LATEST SUBJECT: ', home);
+      router(home);
+    } else if( selection.length === 1 ){ // galaxy
+      console.log('GALAXY SELECTED: ', selection[0]);
+      if(selection[0] !== '0'){
+        console.log('SWITCHING TO HOME GALAXY');
+        router('0');
+      }
+    } else if( selection.length === 2 ){ // sector
+      console.log('SECTOR SELECTED: ', selection[1]);
+      var sector = mk_sector( selection[0] );
+      draw_sector('canvas', sector);
+    } else if( selection.length === 3 ){ // system
+      console.log('SYSTEM SELECTED: ', selection[2]);
+      null;
+    } else if( selection.length === 4 ){ // system object
+      console.log('OBJECT SELECTED: ', selection[3]);
+      global.to_inspect = {
+        samples: 0,
+        reused: 0,
+        calculated: 0,
+        calculated_anal: Analysis(),
+        reused_anal: Analysis(),
+        load_time: Timer()
+      };
+      settings.pixelation = 0.25;
+      var planet_name = selection[3];
+      var planet = mk_planet( selection[0] );
+      console.log( planet_name, ' details: ', planet);
+      refine(planet);
+    } else if( selection.length === 5 ){ // system object detail
+      null;
+    }
   } else {
-    // 27,200 light-years earth to center
-    // milkyway 100-180 kly diameter
-    // 2 kly thick
     var home = '0/0/Sol/Idoria';
     console.log('no planet selection, going home: ', home);
     router(home);
@@ -150,25 +172,25 @@ target_element.append($({
 var canvas = document.getElementById('canvas');
 canvas.style.backgroundColor = 'white';
 
-
+var final_pixelation = 0.25;
 
 var refine = function refine(planet){
-  draw('canvas', planet, function(){
+  draw_planet('canvas', planet, function(){
     //*
-    if( settings.pixelation > 1 ){
-      settings.pixelation = 1;
+    if( settings.pixelation > final_pixelation ){
+      settings.pixelation = final_pixelation;
       requestAnimationFrame(function(){
         refine(planet);
       });
-    } else if( settings.pixelation < 1 ){
+    } else if( settings.pixelation < final_pixelation ){
       settings.pixelation *= 2;
-      if( settings.pixelation > 1 ){ settings.pixelation = 1; }
+      if( settings.pixelation > final_pixelation ){ settings.pixelation = final_pixelation; }
       setTimeout(function(){
         requestAnimationFrame(function(){
           refine(planet);
         });
       }, 100);
-    } else if( settings.pixelation === 1 ){
+    } else if( settings.pixelation === final_pixelation ){
       console.log('FULL resolultion [XX]');
       final_analysis(global.to_inspect);
       //console.log(load_times);

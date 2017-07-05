@@ -5,8 +5,8 @@ export default function(planet, x, y, pixelation, callback){
   var cy = y;
   var r,g,b,a;
 
-  var map_width = settings.map_width;
-  var map_height = settings.map_height;
+  var map_width = settings.map.projection.width;
+  var map_height = settings.map.projection.height;
   map_width *= pixelation;
   map_height *= pixelation;
 

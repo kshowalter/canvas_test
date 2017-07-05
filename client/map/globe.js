@@ -6,7 +6,7 @@ export default function(planet, map_settings, img_data_map){
   var cy = map_settings.cy;
   var r,g,b,a;
 
-  var globe_map_size_adjusted = map_settings.globe_map_size_adjusted;
+  var globe_map_size_adjusted = map_settings.map.globe_size_adjusted;
 
   var diam = planet.radius * 2;
 
