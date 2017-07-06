@@ -12,7 +12,7 @@ import hash_router from 'hash_router';
 
 import settings from './settings';
 
-import mk_sector from './mk_planet';
+import mk_sector from './mk_sector';
 import draw_sector from './draw_sector';
 import mk_planet from './mk_planet';
 import draw_planet from './draw_planet';
@@ -34,22 +34,14 @@ global.measurments = {};
 
 
 var router = hash_router(function(selection){
-  // selection = [ galaxy, sector, system, planet, location(city, ...) ]
-  // 27,200 light-years earth to center
-  // milkyway 100-180 kly diameter
-  // 2 kly thick
   console.log('ROUTING...');
-  if(selection){
-    if( selection.slice(-1) === '' ){
-      selection = selection.slice(0,-1);
-    }
-    console.log('selection', selection);
-    if( selection.length === 0 ) { // unknown
-      console.log('DESTINTATION UNKNOWN');
-      var home = '0';
-      console.log('TRAVELING TO LATEST SUBJECT: ', home);
-      router(home);
-    } else if( selection.length === 1 ){ // galaxy
+
+  if( selection.slice(-1)[0] === '' ){
+    selection = selection.slice(0,-1);
+  }
+  console.log('selection', selection);
+  if(selection && selection.length > 0 ){
+    if( selection.length === 1 ){ // galaxy
       console.log('GALAXY SELECTED: ', selection[0]);
       if(selection[0] !== '0'){
         console.log('SWITCHING TO HOME GALAXY');
@@ -57,11 +49,22 @@ var router = hash_router(function(selection){
       }
     } else if( selection.length === 2 ){ // sector
       console.log('SECTOR SELECTED: ', selection[1]);
-      var sector = mk_sector( selection[0] );
-      draw_sector('canvas', sector);
+      global.to_inspect = {
+        samples: 0,
+        reused: 0,
+        calculated: 0,
+        calculated_anal: Analysis(),
+        reused_anal: Analysis(),
+        load_time: Timer()
+      };
+      var sector = mk_sector( selection[1] );
+      console.log(sector);
+      draw_sector('canvas', sector, function(){
+        console.log('sector drawn');
+        console.log(global.to_inspect);
+      });
     } else if( selection.length === 3 ){ // system
       console.log('SYSTEM SELECTED: ', selection[2]);
-      null;
     } else if( selection.length === 4 ){ // system object
       console.log('OBJECT SELECTED: ', selection[3]);
       global.to_inspect = {
@@ -78,11 +81,13 @@ var router = hash_router(function(selection){
       console.log( planet_name, ' details: ', planet);
       refine(planet);
     } else if( selection.length === 5 ){ // system object detail
+      console.log('OBJECT DETAIL BEYOND SCAN RANGE: ', selection[3]);
       null;
     }
   } else {
-    var home = '0/0/Sol/Idoria';
-    console.log('no planet selection, going home: ', home);
+    console.log('DESTINTATION UNKNOWN');
+    var home = '0';
+    console.log('TRAVELING TO LATEST SUBJECT: ', home);
     router(home);
   }
 });
@@ -93,7 +98,7 @@ var router = hash_router(function(selection){
 
 
 
-
+/*
 // This works on all devices/browsers, and uses IndexedDBShim as a final fallback
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
@@ -151,7 +156,7 @@ request.onerror = function(event){
 
 };
 
-
+//*/
 
 
 

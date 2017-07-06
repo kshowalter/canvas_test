@@ -23,7 +23,7 @@ export default function(sector){
   noise.seed(noise_seed);
 
 
-  var sector_density_factor = 6000;
+  var sector_density_factor = 100;
 
 
   var sensor = function(coor){
@@ -37,7 +37,7 @@ export default function(sector){
     y = roundTo( y, 2 );
     z = roundTo( z, 2 );
 
-    var measurment_id = sector.id;
+    var measurment_id = sector.id+'_'+x+'_'+y+'_'+z;
 
     global.to_inspect.samples++;
     var measurment;
@@ -53,16 +53,15 @@ export default function(sector){
       };
 
 
-
-
       var sector_density_noise = noise.simplex3( x/sector_density_factor, y/sector_density_factor, z/sector_density_factor );
-
+      //console.log(x,y,z,sector_density_noise);
       sector_density_noise = ( sector_density_noise + 1 ) / 2;
 
+      if( sector_density_noise < 0.98 ){
+        sector_density_noise = 0;
+      }
+
       measurment.density = sector_density_noise;
-
-
-
 
 
 

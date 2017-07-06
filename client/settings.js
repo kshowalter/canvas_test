@@ -7,6 +7,13 @@ var settings = {
     globe_size: 360,
     sector: 500,
   },
+  size: {
+    // selection = [ galaxy, sector, system, planet, location(city, ...) ]
+    // 27,200 light-years earth to center
+    // milkyway 100-180 kly diameter
+    // 2 kly thick
+    sector: 1000 // ly
+  },
   rgb: {
     biome: {
       'space': [0, 0, 0],
