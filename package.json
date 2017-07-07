@@ -26,7 +26,8 @@
     "redux": "latest",
     "specdom": "kshowalter/specdom",
     "specdom_helper": "kshowalter/specdom_helper",
-    "geometry": "kshowalter/geometry"
+    "geometry": "kshowalter/geometry",
+    "mk_universe": "kshowalter/mk_universe"
   },
   "devDependencies": {
     "babel-core": "~6.8.0",

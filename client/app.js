@@ -12,7 +12,7 @@ import hash_router from 'hash_router';
 
 import settings from './settings';
 
-import mk_universe from './mk_universe/mk_universe';
+import mk_universe from 'mk_universe';
 
 import draw_sector from './draw_sector';
 import draw_planet from './draw_planet';
