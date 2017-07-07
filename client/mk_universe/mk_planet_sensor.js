@@ -1,5 +1,5 @@
 import Chance from 'chance';
-var noise = require('../lib/noisejs/perlin');
+var noise = require('./lib/noisejs/perlin');
 
 
 var to_cartesian = function(r,lat,lon){

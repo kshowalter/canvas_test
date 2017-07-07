@@ -12,9 +12,9 @@ import hash_router from 'hash_router';
 
 import settings from './settings';
 
-import mk_sector from './mk_sector';
+import mk_universe from './mk_universe/mk_universe';
+
 import draw_sector from './draw_sector';
-import mk_planet from './mk_planet';
 import draw_planet from './draw_planet';
 
 var Analysis = require('./function/Analysis');
@@ -40,6 +40,11 @@ var router = hash_router(function(selection){
     selection = selection.slice(0,-1);
   }
   console.log('selection', selection);
+
+  var universe = mk_universe(selection);
+  console.log(universe.galaxies[0]);
+
+  /*
   if(selection && selection.length > 0 ){
     if( selection.length === 1 ){ // galaxy
       console.log('GALAXY SELECTED: ', selection[0]);
@@ -90,6 +95,9 @@ var router = hash_router(function(selection){
     console.log('TRAVELING TO LATEST SUBJECT: ', home);
     router(home);
   }
+  //*/
+
+
 });
 
 

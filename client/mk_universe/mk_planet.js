@@ -1,5 +1,4 @@
 import Chance from 'chance';
-import settings from './settings';
 import mk_planet_sensor from './mk_planet_sensor';
 import f from 'functions';
 import great_circle_distance from './function/great_circle_distance';
